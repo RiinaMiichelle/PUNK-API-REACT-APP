@@ -1,9 +1,52 @@
-import React, { Component } from 'react';
+import React from 'react';
+
+class Beer extends React.Component {
+  constructor (props) {
+    super(props); 
+    this.state = {
+      isLiked: false,
+    }
+  }
+
+  handleBeerLike = () => {
+    this.setState({
+      isLiked: !this.state.isLiked
+    })
+  }
+
+  render() {
+    const { isLiked } = this.state;
+    const { beer } = this.props;
+    let likeButtonText = "Like Beer";
+    if (isLiked) {
+      likeButtonText = "Unlike Beer";
+    }
+
+    return (
+      <div className="beer" >
+        <button onClick={this.handleBeerLike}>{likeButtonText}</button>
+        {
+          Object.keys(beer).map((beerProperty, idx) => {
+            if (beerProperty === 'id') {
+              return null;
+            }
+
+            return (
+              <div key={idx} className={beerProperty}>
+                {`${beerProperty}: ${JSON.stringify(beer[beerProperty])}`}
+              </div>
+            );
+          })
+        }
+      </div>
+    )
+  }
+}
 
 
 class App extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       beers: []
     }
@@ -21,23 +64,23 @@ class App extends React.Component {
           });
   }
 
-  // displayBeerInfo = () => {
-  //   var beerList = this.state.beers
-  //   console.log(beerList);
-  // }
-
+  createBeerComponents = () => {
+    return this.state.beers.map((beer, idx) =>
+        <li key={idx}>
+          <Beer beer={beer}/>
+          <br></br>
+        </li>
+    );
+  }
 
   render () {
-    // console.log('state: ' + JSON.stringify(this.state));
     return (
-      <div>
-        
-      </div>
+      <ul>
+        {this.createBeerComponents()}
+      </ul>
     );
   }
   
 }
-
-
 
 export default App;
